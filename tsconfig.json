@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    
+    "target": "es2017",
+    "useUnknownInCatchVariables": false,
     "lib": [
       "dom",
       "dom.iterable",
@@ -18,7 +20,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react"
   },
   "include": [
     "src"
