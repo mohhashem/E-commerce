@@ -6,7 +6,6 @@ import Grid from "@mui/material/Grid";
 import { Formik, Form, FormikProps } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import { useLayoutEffect } from "react";
@@ -15,6 +14,7 @@ import Stack from "@mui/material/Stack";
 import ISignInForm from "../../Model/ISignInForm";
 import IFormStatus from "../../Model/IFormStatus";
 import IFormStatusProps from "../../Model/IFormStatusProps";
+import { useEffect } from "react";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -69,8 +69,13 @@ const formStatusProps: IFormStatusProps = {
 };
 
 const SigninScene = () => {
-  useLayoutEffect(() => {
-    console.log("h");
+  useEffect(() => {
+    
+
+    setDisplayFormStatus(false);
+  
+
+   
   }, []);
 
   const onSubmit = (values: ISignInForm, actions: any) => {
@@ -103,10 +108,11 @@ const SigninScene = () => {
       const res = await axios.get("https://localhost:7048/User/UserLogin", {
         params: { email: data.email, password: data.password },
       });
-      console.log(res.data);
+      
 
       if (res.data === false) {
         setFormStatus(formStatusProps.error);
+        localStorage.setItem
       }
       if (res.data === true) {
         navigate("/Home");
@@ -117,8 +123,7 @@ const SigninScene = () => {
       const response = error.response;
 
       if (response.data === "false" && response.status === 400) {
-        setFormStatus(formStatusProps.duplicate);
-      } else {
+      
         setFormStatus(formStatusProps.error);
       }
     } finally {

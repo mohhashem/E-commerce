@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Signin from '../Layouts/Signin'
 import Signup from '../Layouts/Signup'
 import Home from '../Layouts/Home'
-
+import PrivateRoute from './PrivateRoute'
 const Routess = () => {
     return (
         // <BrowserRouter>

@@ -5,7 +5,7 @@ import Header from "../Components/HomeScene/Components/Header";
 const SignUp = () => {
   return (
     <>
-      <Header></Header>
+      <Header handleFilter={null}></Header>
       <SignUpScene></SignUpScene>
     </>
   );

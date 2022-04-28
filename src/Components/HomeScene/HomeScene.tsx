@@ -7,7 +7,7 @@ import Drawer from "@mui/material/Drawer";
 import Badge from "@mui/material/Badge";
 import IProducts from "../../Model/IProduct";
 import { makeStyles, createStyles } from "@mui/styles";
-import { getResults } from "../../Services/Services";
+import { getResults } from "../../Services/ProductServices";
 import Cart from "./Components/Cart";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import { CartItemType } from "../../Model/CartItemType";
@@ -18,18 +18,18 @@ const useStyles = makeStyles(() =>
     styled:{
       position:"fixed",
       display:"center",
-      zIndex:"100",
-      right:"20px",
-      marginTop:"20px"
+      zIndex:"150",
+      right:"25px",
+      marginTop:"30px"
     },
     root:{
       
 
-      margin: "0 auto",
+      // margin: "0 auto",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      height: "100%",
+      height: "90%%",
       verticalAlign: "middle",
     }
 
@@ -48,11 +48,17 @@ const HomeScene = () => {
     items.reduce((ack: number, item) => ack + item.amount, 0);
 
   React.useEffect(() => {
-    var results = getResults().then(function (response: any) {
-      setProducts(response.data);
-      console.log(response.data);
+    var results = getResults().then(async function (response: any) {
+      var res = await response.data;
+      // console.log(await res);
+      setProducts(await res);
+      // console.log(products);
     });
   }, []);
+
+  const openModal = () => {
+    
+  }
 
   const handleAddToCart = (clickedItem: CartItemType) => {
     setCartItems((prev) => {
@@ -100,16 +106,16 @@ const HomeScene = () => {
             removeFromCart={handleRemoveFromCart}
           />
         </Drawer>
-        <button className={classes.styled}>
+        <button className={classes.styled} onClick={() => setCartOpen(true)}>
         <Badge badgeContent={getTotalItems(cartItems)} color="error">
-            <ShoppingCartCheckoutIcon onClick={() => setCartOpen(true)} />
+            <ShoppingCartCheckoutIcon  />
           </Badge>
         </button>
        
      
          
        
-        <Products products={products} handleAddToCart={handleAddToCart} />
+        <Products products={products} openModal={openModal} handleAddToCart={handleAddToCart} />
      
     </Stack>
     
