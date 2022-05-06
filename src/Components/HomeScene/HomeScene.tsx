@@ -1,64 +1,63 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Products from "./Components/Products";
-import Header from "./Components/Header";
-import Searchbar from "./Components/SearchBar";
 import Stack from "@mui/material/Stack";
 import Drawer from "@mui/material/Drawer";
 import Badge from "@mui/material/Badge";
 import IProducts from "../../Model/IProduct";
 import { makeStyles, createStyles } from "@mui/styles";
+import Button from "@mui/material/Button";
 import { getResults } from "../../Services/ProductServices";
-import Cart from "./Components/Cart";
+import Cart from "./Components/CartScene/Cart";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import { CartItemType } from "../../Model/CartItemType";
+import { Context } from "../../Context/UserContext";
 
 const useStyles = makeStyles(() =>
   createStyles({
-   
-    styled:{
-      position:"fixed",
-      display:"center",
-      zIndex:"150",
-      right:"25px",
-      marginTop:"30px"
+    styled: {
+      position: "fixed",
+      display: "center",
+      zIndex: "150",
+      right: "50px",
+      marginTop: "30px",
     },
-    root:{
-      
-
-      // margin: "0 auto",
+    signout: {
+      marginRight: "10px",
+    },
+    root: {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
       height: "90%%",
       verticalAlign: "middle",
-    }
-
+    },
   })
-  );
-  
+);
 
 const HomeScene = () => {
-
   const classes = useStyles();
 
+  const { token, setToken } = useContext(Context);
   const [products, setProducts] = useState<IProducts[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItemType[]>([]);
   const getTotalItems = (items: CartItemType[]) =>
     items.reduce((ack: number, item) => ack + item.amount, 0);
 
-  React.useEffect(() => {
-    var results = getResults().then(async function (response: any) {
-      var res = await response.data;
-      // console.log(await res);
-      setProducts(await res);
-      // console.log(products);
-    });
-  }, []);
+  const signout = () => {
+    setToken(false);
+  };
 
-  const openModal = () => {
-    
-  }
+  useEffect(() => {
+    getResults().then(async function (response: any) {
+      var res = await response.data;
+
+      setProducts(await res);
+      console.log(token);
+    });
+  }, [token]);
+
+  const openModal = () => {};
 
   const handleAddToCart = (clickedItem: CartItemType) => {
     setCartItems((prev) => {
@@ -92,33 +91,27 @@ const HomeScene = () => {
   };
 
   return (
-   
-    <Stack spacing={2}>
-     
-        <Drawer
-          anchor="left"
-          open={cartOpen}
-          onClose={() => setCartOpen(false)}
-        >
-          <Cart
-            cartItems={cartItems}
-            addToCart={handleAddToCart}
-            removeFromCart={handleRemoveFromCart}
-          />
-        </Drawer>
-        <button className={classes.styled} onClick={() => setCartOpen(true)}>
+    <Stack spacing={2} style={{ marginTop: "50px" }}>
+      <Drawer anchor="left" open={cartOpen} onClose={() => setCartOpen(false)}>
+        <Cart
+          cartItems={cartItems}
+          addToCart={handleAddToCart}
+          removeFromCart={handleRemoveFromCart}
+        />
+      </Drawer>
+      <button className={classes.styled} onClick={() => setCartOpen(true)}>
         <Badge badgeContent={getTotalItems(cartItems)} color="error">
-            <ShoppingCartCheckoutIcon  />
-          </Badge>
-        </button>
-       
-     
-         
-       
-        <Products products={products} openModal={openModal} handleAddToCart={handleAddToCart} />
-     
+          <ShoppingCartCheckoutIcon />
+        </Badge>
+      </button>
+      <Button className={classes.signout} onClick={signout}>Sign Out</Button>
+
+      <Products
+        products={products}
+        openModal={openModal}
+        handleAddToCart={handleAddToCart}
+      />
     </Stack>
-    
   );
 };
 

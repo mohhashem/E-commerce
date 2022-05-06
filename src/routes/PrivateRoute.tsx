@@ -1,25 +1,12 @@
-import React from 'react';
+import React, { useContext } from "react";
 
-import { Route } from 'react-router-dom';
+import { Navigate, Outlet } from "react-router-dom";
 
-import PropTypes from 'prop-types';
+import { Context } from "../Context/UserContext";
 
-
-import SigninScene from '../Components/SigninScene/SigninScene';
-
-
-
-const PrivateRoute = ({  ...rest }) => {
-
-
-
-
-
-return <Route {...rest} element={<SigninScene/>} />;
-
-
-
-
-}
+const PrivateRoute = () => {
+  const { token } = useContext(Context);
+  return token ? <Outlet /> : <Navigate to="/" />;
+};
 
 export default PrivateRoute;

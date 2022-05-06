@@ -1,10 +1,9 @@
 import React from "react";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
-import { CartItemType } from "../../../Model/CartItemType";
+import { CartItemType } from "../../../../Model/CartItemType";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 
 type Props = {

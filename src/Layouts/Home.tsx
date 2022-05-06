@@ -1,10 +1,13 @@
 import React from "react";
-import Header from "../Components/HomeScene/Components/Header";
-import { makeStyles, createStyles } from "@mui/styles";
 import HomeScene from "../Components/HomeScene/HomeScene";
+import ProductContextProvider from "../Context/ProductContext";
 
 const Home = () => {
-  return <HomeScene />;
+  return (
+    <ProductContextProvider>
+      <HomeScene />
+    </ProductContextProvider>
+  );
 };
 
 export default Home;

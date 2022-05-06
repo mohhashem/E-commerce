@@ -6,14 +6,13 @@ import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import { Formik, Form, FormikProps } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
-
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-import { useLayoutEffect } from "react";
 import Link from "@mui/material/Link";
 import IFormStatus from "../../Model/IFormStatus";
+
 import IFormStatusProps from "../../Model/IFormStatusProps";
+import { GenerateUser } from "../../Services/SignupServices";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -21,12 +20,15 @@ const useStyles = makeStyles(() =>
       background:
         "linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)), url('ecommerce.jpg') no-repeat center",
       backgroundSize: "cover",
-      height: "700px",
+      height: "100vh",
     },
 
     signin: {
       width: "100%",
       marginTop: "100px",
+    },
+    admin: {
+      width: "100%",
     },
 
     but: {
@@ -117,20 +119,9 @@ const SignUpScene = () => {
       }),
   });
 
-  useLayoutEffect(() => {
-    console.log("h");
-  }, []);
-
   const createNewUser = async (data: ISignUpForm, resetForm: Function) => {
     try {
-      axios
-        .post("https://localhost:7048/User/GenerateUser", {
-          userFullName: data.fullName,
-          userPassword: data.password,
-          userEmail: data.email,
-        })
-        .then((response) => response.status)
-        .catch((err) => console.warn(err));
+      GenerateUser(data.fullName, data.password, data.email);
 
       if (data) {
         setFormStatus(formStatusProps.success);
@@ -146,7 +137,8 @@ const SignUpScene = () => {
       }
     } finally {
       setDisplayFormStatus(true);
-      navigate("Signin");
+      alert("Registered Successfully");
+      navigate("/Home");
     }
   };
 
@@ -202,7 +194,7 @@ const SignUpScene = () => {
                     helperText={
                       errors.fullName && touched.fullName
                         ? errors.fullName
-                        : "Enter your full name."
+                        : "Enter your Full Name."
                     }
                     error={errors.fullName && touched.fullName ? true : false}
                     onChange={handleChange}
@@ -272,14 +264,14 @@ const SignUpScene = () => {
                   <TextField
                     name="email"
                     id="email"
-                    label="Email-id"
+                    label="Email-address"
                     value={values.email}
                     type="email"
                     autoComplete="off"
                     helperText={
                       errors.email && touched.email
                         ? errors.email
-                        : "Enter email-id"
+                        : "Enter your email-address"
                     }
                     error={errors.email && touched.email ? true : false}
                     onChange={handleChange}
@@ -310,12 +302,13 @@ const SignUpScene = () => {
                     >
                       Submit
                     </Button>
+
                     <Link
                       type="submit"
                       color="primary"
                       className={classes.signin}
                       onClick={() => {
-                        navigate("/Signin");
+                        navigate("/");
                       }}
                     >
                       Already have an account? Signin

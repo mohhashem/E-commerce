@@ -1,28 +1,19 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
-import { makeStyles, createStyles } from "@mui/styles";
 import Toolbar from "@mui/material/Toolbar";
-import Tabs from "@mui/material/Tabs";
 import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
+import { Context } from "../../../Context/UserContext";
 
 export interface IProps {
   handleFilter?: any;
 }
 
-const useStyles = makeStyles(() =>
-  createStyles({ 
-    bar:{
-     
-     
-    }
-   })
-  );
-
 const Header = (props: IProps) => {
+  const { search } = React.useContext(Context);
   const { handleFilter } = props;
   const [keyword, setKeyword] = useState("");
   const searchRef = React.useRef<any>();
@@ -31,12 +22,12 @@ const Header = (props: IProps) => {
     value = event.target.value;
     handleFilter(value);
     setKeyword(value);
-    // event.target.focus();
   };
-  React.useEffect(() => {
-    // searchRef.current.value = value;
-    searchRef.current.focus();
-    // console.log("a");
+
+  useEffect(() => {
+    if (searchRef.current) {
+      searchRef.current.focus();
+    }
   });
   const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -46,7 +37,7 @@ const Header = (props: IProps) => {
       backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginRight: theme.spacing(2),
-    marginLeft: 0,
+    marginLeft: 10,
     width: "100%",
     [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(3),
@@ -79,25 +70,26 @@ const Header = (props: IProps) => {
     },
   }));
 
-  const classes=useStyles();
-
   return (
     <React.Fragment>
-      <AppBar className={classes.bar} position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <Typography>Ecommerce</Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              onChange={handleFilterAction}
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-              value={keyword}
-              inputRef={searchRef}
-            />
-          </Search>
+
+          {search && (
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                onChange={handleFilterAction}
+                placeholder="Search…"
+                inputProps={{ "aria-label": "search" }}
+                value={keyword}
+                inputRef={searchRef}
+              />
+            </Search>
+          )}
         </Toolbar>
       </AppBar>
     </React.Fragment>

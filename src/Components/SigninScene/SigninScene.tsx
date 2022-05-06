@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { makeStyles, createStyles } from "@mui/styles";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -8,21 +8,26 @@ import * as Yup from "yup";
 import axios from "axios";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-import { useLayoutEffect } from "react";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import ISignInForm from "../../Model/ISignInForm";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 import IFormStatus from "../../Model/IFormStatus";
 import IFormStatusProps from "../../Model/IFormStatusProps";
+
+import { Context } from "../../Context/UserContext";
 import { useEffect } from "react";
+// import { getUser } from "../../Services/LoginServices";
 
 const useStyles = makeStyles(() =>
   createStyles({
     main: {
+      height: "100vh",
       background:
         "linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)), url('ecommerce.jpg') no-repeat center",
       backgroundSize: "cover",
-      height: 750,
     },
 
     signup: {
@@ -42,7 +47,7 @@ const useStyles = makeStyles(() =>
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      height: "70%",
+      height: "100%",
       verticalAlign: "middle",
     },
     textField: {
@@ -69,21 +74,28 @@ const formStatusProps: IFormStatusProps = {
 };
 
 const SigninScene = () => {
-  useEffect(() => {
-    
+  const { setUsername } = useContext(Context);
+  const { setToken } = useContext(Context);
+  const { setSearch } = React.useContext(Context);
 
-    setDisplayFormStatus(false);
-  
+  const [admin, setAdmin] = useState(false);
 
-   
-  }, []);
+  const handleAdmin = () => {
+    if (admin === false) setAdmin(true);
+
+    if (admin === true) setAdmin(false);
+  };
 
   const onSubmit = (values: ISignInForm, actions: any) => {
     Login(values, actions.resetForm);
-    setTimeout(() => {
-      actions.setSubmitting(false);
-    }, 500);
   };
+
+  useEffect(() => {
+    setSearch(false);
+    localStorage.clear();
+    setToken(false);
+    // console.log(admin);
+  }, [setToken, setSearch]);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email().required("Enter a valid email"),
@@ -104,35 +116,67 @@ const SigninScene = () => {
   const navigate = useNavigate();
 
   const Login = async (data: ISignInForm, resetForm: Function) => {
-    try {
-      const res = await axios.get("https://localhost:7048/User/UserLogin", {
-        params: { email: data.email, password: data.password },
-      });
-      
+    if (admin === false) {
+      try {
+        // const res:Promise<boolean> = getUser(data.email,data.password);
+        const res = await axios.get("https://localhost:7048/User/UserLogin", {
+          params: { email: data.email, password: data.password },
+        });
 
-      if (res.data === false) {
-        setFormStatus(formStatusProps.error);
-        localStorage.setItem
-      }
-      if (res.data === true) {
-        navigate("/Home");
-      }
+        if (res.data === " ") {
+          setFormStatus(formStatusProps.error);
+        } else {
+          setUsername(data.email);
+          console.log(res.data);
+          localStorage.setItem("user", data.email);
+          localStorage.setItem("token", res.data);
+          setToken(true);
+          setSearch(true);
+          navigate("/Home");
+        }
 
-      resetForm({});
-    } catch (error) {
-      const response = error.response;
+        resetForm({});
+      } catch (error) {
+        const response = error.response;
+        alert("connection error");
 
-      if (response.data === "false" && response.status === 400) {
-      
-        setFormStatus(formStatusProps.error);
+        if (response.data === "false" && response.status === 400) {
+          setFormStatus(formStatusProps.error);
+        }
+      } finally {
+        setDisplayFormStatus(true);
       }
-    } finally {
-      setDisplayFormStatus(true);
+    } else if (admin === true) {
+      try {
+        // const res:Promise<boolean> = getUser(data.email,data.password);
+        const res = await axios.get("https://localhost:7048/Admin/Login", {
+          params: { email: data.email, password: data.password },
+        });
+
+        if (res.data === " ") {
+          alert("youre not an admin, not authorized to enter!");
+        } else {
+          console.log(res.data);
+
+          navigate("/Admin");
+
+          resetForm({});
+        }
+      } catch (error) {
+        const response = error.response;
+        alert(response);
+
+        if (response.data === "false" && response.status === 400) {
+          setFormStatus(formStatusProps.error);
+        }
+      } finally {
+        setDisplayFormStatus(true);
+      }
     }
   };
 
   return (
-    <div className={classes.main}>
+    <div className={classes.main} style={{ height: "100vh" }}>
       <div className={classes.root}>
         <Formik
           initialValues={{
@@ -153,8 +197,6 @@ const SigninScene = () => {
             } = props;
             return (
               <Form>
-                {/* <Header /> */}
-
                 <Typography
                   component="h1"
                   variant="h5"
@@ -177,7 +219,7 @@ const SigninScene = () => {
                   <TextField
                     name="email"
                     id="email"
-                    label="Email-id"
+                    label="Email-address"
                     value={values.email}
                     type="email"
                     autoComplete="off"
@@ -245,11 +287,18 @@ const SigninScene = () => {
                       type="submit"
                       color="primary"
                       onClick={() => {
-                        navigate("/");
+                        navigate("Signup");
                       }}
                     >
                       Doesn't have an account? Signup
                     </Link>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={<Switch />}
+                        label="admin?"
+                        onClick={handleAdmin}
+                      />
+                    </FormGroup>
                   </Stack>
 
                   {displayFormStatus && (

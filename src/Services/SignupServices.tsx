@@ -1,15 +1,14 @@
-import React from 'react'
-import IProducts from '../Model/IProduct';
-import axios from 'axios';
+import axios from "axios";
 
+function GenerateUser(fullname: string, password: string, email: string): any {
+  axios
+    .post("https://localhost:7048/User/GenerateUser", {
+      userFullName: fullname,
+      userPassword: password,
+      userEmail: email,
+    })
+    .then((response) => response.status)
+    .catch((err) => alert("connection problem"));
+}
 
-
-  function getResults(): any {
-    const results = axios
-      .get<IProducts[]>("https://localhost:7048/Product/getProducts");
-      return results;
-    
-      
-  }
-
-  export {getResults};
+export { GenerateUser };

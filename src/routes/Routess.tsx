@@ -1,19 +1,26 @@
-import React from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Signin from '../Layouts/Signin'
-import Signup from '../Layouts/Signup'
-import Home from '../Layouts/Home'
-import PrivateRoute from './PrivateRoute'
-const Routess = () => {
-    return (
-        // <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Signup />} />
-          <Route path="Signin" element={<Signin />} />
-          <Route path="Home" element={<Home />} />
-        </Routes>
-      // </BrowserRouter>
-    )
-}
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Signin from "../Layouts/Signin";
+import Signup from "../Layouts/Signup";
+import Home from "../Layouts/Home";
 
-export default Routess
+import Payment from "../Layouts/Payment";
+import Admin from "../Layouts/Admin";
+import PrivateRoute from "./PrivateRoute";
+const Routess = () => {
+  return (
+    // <BrowserRouter>
+    <Routes>
+      <Route path="Signup" element={<Signup />} />
+      <Route path="/" element={<Signin />} />
+      <Route element={<PrivateRoute />}>
+        <Route path="Home" element={<Home />} />
+        <Route path="Payment" element={<Payment />} />
+      </Route>
+      <Route path="Admin" element={<Admin />} />
+    </Routes>
+    // </BrowserRouter>
+  );
+};
+
+export default Routess;

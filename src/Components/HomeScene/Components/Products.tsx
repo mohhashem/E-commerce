@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Product from "./Product";
 import Grid from "@mui/material/Grid";
 import IProducts from "../../.././Model/IProduct";
-import Stack from '@mui/material/Stack';
+import Stack from "@mui/material/Stack";
 import Header from "./Header";
 
 export interface IProps {
@@ -23,47 +23,40 @@ const Products = (props: IProps) => {
 
   return (
     <>
-    <Stack spacing={4}>
+      <Stack spacing={4} style={{ marginTop: "20px" }}>
+        <Header handleFilter={handleFilter} />
 
+        <Grid
+          container
+          justifyContent="center"
+          alignItems="center"
+          spacing={1}
+          direction="row"
+        >
+          {products
+            .filter((e) => {
+              if (searchTerm !== "") {
+                // console.log("aa");
+                return e.productName
+                  .toLowerCase()
+                  .includes(searchTerm.toLowerCase());
+              } else {
+                // console.log(products)
+                return products;
+              }
+            })
 
-   
-    <Header handleFilter={handleFilter}/>
-    
-      
-
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        spacing={1}
-        direction="row"
-        
-      >
-        {products
-          .filter((e) => {
-            if (searchTerm != "") {
-              // console.log("aa");
-              return (
-                e.productName.toLowerCase().includes(searchTerm.toLowerCase())
-              );
-            }else{
-              // console.log(products)
-              return (products);
-            }
-          })
-
-          .map((product: IProducts, index: any) => (
-            <Grid item xs={12} sm={4} lg={3} xl={3} key={index}>
-              <Product
-                products={product}
-                openModal={props.openModal}
-                handleAddToCart={props.handleAddToCart}
-                key={index}
-              ></Product>
-            </Grid>
-          ))}
-      </Grid>
-     
+            .map((product: IProducts, index: any) => (
+              <Grid item xs={12} sm={4} lg={3} xl={3} key={index}>
+                <Product
+                  products={product}
+                  openModal={props.openModal}
+                  handleAddToCart={props.handleAddToCart}
+                  key={index}
+                ></Product>
+              </Grid>
+            ))}
+        </Grid>
       </Stack>
     </>
   );

@@ -1,16 +1,13 @@
-import React from 'react'
+import axios from "axios";
 
-import axios from 'axios';
-import ISignInForm from '../Model/ISignInForm';
+const getUser = async (email: string, password: string): Promise<boolean> => {
+  var res = await axios.get<boolean, any>(
+    "https://localhost:7048/User/UserLogin",
+    {
+      params: { email: email, password: password },
+    }
+  );
+  return res;
+};
 
-
-//  async isUser(data:ISignInForm):any {
-//      const res = await axios.get("https://localhost:7048/User/UserLogin", {
-//         params: { email: data.email, password: data.password },
-//       });
-//       return await res;
-   
-      
-//   }
-
-//   export {isUser};
+export { getUser };
