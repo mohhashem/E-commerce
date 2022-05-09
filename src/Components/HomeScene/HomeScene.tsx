@@ -55,7 +55,7 @@ const HomeScene = () => {
       setProducts(await res);
       console.log(token);
     });
-  }, [token]);
+  }, []);
 
   const openModal = () => {};
 

@@ -75,7 +75,7 @@ const formStatusProps: IFormStatusProps = {
     type: "success",
   },
   duplicate: {
-    message: "Email-id already exist. Please use different email-id.",
+    message: "Email address already exist. Please use different email-id.",
     type: "error",
   },
   error: {
@@ -121,11 +121,21 @@ const SignUpScene = () => {
 
   const createNewUser = async (data: ISignUpForm, resetForm: Function) => {
     try {
-      GenerateUser(data.fullName, data.password, data.email);
+      const res = await GenerateUser(data.fullName, data.password, data.email);
 
       if (data) {
         setFormStatus(formStatusProps.success);
         resetForm({});
+      }
+
+      console.log(res);
+
+      if(!res){
+        setFormStatus(formStatusProps.duplicate);
+      }
+      if(res){
+        alert("Registered Successfully");
+        navigate("/Home");
       }
     } catch (error) {
       const response = error.response;
@@ -137,8 +147,7 @@ const SignUpScene = () => {
       }
     } finally {
       setDisplayFormStatus(true);
-      alert("Registered Successfully");
-      navigate("/Home");
+     
     }
   };
 
