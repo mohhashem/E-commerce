@@ -134,8 +134,6 @@ const SigninScene = () => {
           setSearch(true);
           navigate("/Home");
         }
-
-        resetForm({});
       } catch (error) {
         const response = error.response;
         alert("connection error");
@@ -145,6 +143,7 @@ const SigninScene = () => {
         }
       } finally {
         setDisplayFormStatus(true);
+        resetForm({});
       }
     } else if (admin === true) {
       try {

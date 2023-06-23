@@ -130,10 +130,10 @@ const SignUpScene = () => {
 
       console.log(res);
 
-      if(!res){
+      if (!res) {
         setFormStatus(formStatusProps.duplicate);
       }
-      if(res){
+      if (res) {
         alert("Registered Successfully");
         navigate("/Home");
       }
@@ -147,7 +147,6 @@ const SignUpScene = () => {
       }
     } finally {
       setDisplayFormStatus(true);
-     
     }
   };
 

@@ -104,7 +104,9 @@ const HomeScene = () => {
           <ShoppingCartCheckoutIcon />
         </Badge>
       </button>
-      <Button className={classes.signout} onClick={signout}>Sign Out</Button>
+      <Button className={classes.signout} onClick={signout}>
+        Sign Out
+      </Button>
 
       <Products
         products={products}
